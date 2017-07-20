@@ -130,6 +130,10 @@
     skipOneCycle = NO;
     _realTimeIsActivated = NO;
     _militaryTime = NO;
+    
+    if ([self.delegate respondsToSelector:@selector(analogClockEnableAddIcons)]) {
+        _enableIcons = [self.delegate analogClockEnableAddIcons];
+    }
 }
 
 - (void)layoutSubviews {
@@ -493,29 +497,28 @@
         }
     }
     
-    // DIGIT ICONS
-    
+    // ADD ICONS
     if (self.enableIcons) {
         
-        [self addIcon:rect index:11 image:@"icw_off"];
+        [self addIcon:rect index:0 image:@"icw_off"];
         
-        [self addIcon:rect index:10 image:@"icw_call"];
-        [self addIcon:rect index:9 image:@"icw_mail"];
-        [self addIcon:rect index:8 image:@"icw_social"];
-        [self addIcon:rect index:7 image:@"icw_sleep"];
+        [self addIcon:rect index:1 image:@"icw_call"];
+        [self addIcon:rect index:2 image:@"icw_mail"];
+        [self addIcon:rect index:3 image:@"icw_social"];
+        [self addIcon:rect index:4 image:@"icw_sleep"];
         
-        [self addIcon:rect index:4 image:@"icw_run"];
-        [self addIcon:rect index:3 image:@"icw_document"];
-        [self addIcon:rect index:2 image:@"icw_calendar"];
-        [self addIcon:rect index:1 image:@"icw_messages"];
+        [self addIcon:rect index:7 image:@"icw_run"];
+        [self addIcon:rect index:8 image:@"icw_document"];
+        [self addIcon:rect index:9 image:@"icw_calendar"];
+        [self addIcon:rect index:10 image:@"icw_messages"];
         
-        [self addIcon:rect index:0 image:@"icw_on"];
+        [self addIcon:rect index:11 image:@"icw_on"];
     }
-    
 }
 
 
 - (void)addIcon:(CGRect)rect index:(NSInteger)index image:(NSString *)image {
+    
     CGFloat iconSize = rect.size.height * 0.08;
     CGFloat halfSize = iconSize / 2;
     

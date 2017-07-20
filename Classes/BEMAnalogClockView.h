@@ -255,6 +255,11 @@ IB_DESIGNABLE
 - (CGFloat)analogClock:(BEMAnalogClockView *)clock graduationOffsetForIndex:(NSInteger)index;
 
 
+/** Enable add iocons.
+ @return Wheter is possible or not */
+- (BOOL)analogClockEnableAddIcons;
+
+
 //----- CLOCK EVENTS -----//
 
 /** Sent to the delegate each time the clock is loaded or reloaded.
