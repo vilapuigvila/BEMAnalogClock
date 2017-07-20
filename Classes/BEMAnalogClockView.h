@@ -191,6 +191,8 @@ IB_DESIGNABLE
 /// Stops the real time feature. The clock will not move anymore.
 - (void)stopRealTime;
 
+- (void)changeStateIcon:(UIImage *)icon;
+
 @end
 
 
@@ -255,9 +257,19 @@ IB_DESIGNABLE
 - (CGFloat)analogClock:(BEMAnalogClockView *)clock graduationOffsetForIndex:(NSInteger)index;
 
 
+
+// ---------------------- SH ------------------ //
 /** Enable add iocons.
  @return Wheter is possible or not */
 - (BOOL)analogClockEnableAddIcons;
+
+
+/** Enable add iocons.
+*/
+- (NSArray<NSString *> *)analogClockAddIcons;
+
+- (void)analogClockIcons:(NSArray<UIImage *> *)icons indexes:(NSArray<NSNumber *> *)indexes;
+
 
 
 //----- CLOCK EVENTS -----//
@@ -270,7 +282,19 @@ IB_DESIGNABLE
  @param clock The clock object that finished loading or reloading. */
 - (void)clockDidFinishLoading:(BEMAnalogClockView *)clock;
 
+
+
 @end
+
+
+
+@interface NSArray (Additions)
+
+- (id)safeObjectAtIndex:(NSUInteger)index;
+
+@end
+
+
 
 @interface UIImage (MTGAdditions)
 

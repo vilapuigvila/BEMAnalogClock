@@ -499,27 +499,84 @@
     
     // ADD ICONS
     if (self.enableIcons) {
-        
-        [self addIcon:rect index:0 image:@"icw_off"];
-        
-        [self addIcon:rect index:1 image:@"icw_call"];
-        [self addIcon:rect index:2 image:@"icw_mail"];
-        [self addIcon:rect index:3 image:@"icw_social"];
-        [self addIcon:rect index:4 image:@"icw_sleep"];
-        
-        [self addIcon:rect index:7 image:@"icw_run"];
-        [self addIcon:rect index:8 image:@"icw_document"];
-        [self addIcon:rect index:9 image:@"icw_calendar"];
-        [self addIcon:rect index:10 image:@"icw_messages"];
-        
-        [self addIcon:rect index:11 image:@"icw_on"];
+        if ([self.delegate respondsToSelector:@selector(analogClockAddIcons)]) {
+            NSMutableArray *images  = [NSMutableArray array];
+            NSMutableArray *indexes = [NSMutableArray array];
+            
+            NSArray *icons = [self.delegate analogClockAddIcons];
+            
+            if ([icons safeObjectAtIndex:0]) {
+                UIImage *img = [UIImage imageNamed:icons[0]];
+                [self addIcon:rect index:0 image:img];
+                [images addObject:img];
+                [indexes addObject:@(0)];
+            }
+            if ([icons safeObjectAtIndex:1]) {
+                UIImage *img = [UIImage imageNamed:icons[1]];
+                [self addIcon:rect index:1 image:img];
+                [images addObject:img];
+                [indexes addObject:@(1)];
+            }
+            if ([icons safeObjectAtIndex:2]) {
+                UIImage *img = [UIImage imageNamed:icons[2]];
+                [self addIcon:rect index:2 image:img];
+                [images addObject:img];
+                [indexes addObject:@(2)];
+            }
+            if ([icons safeObjectAtIndex:3]) {
+                UIImage *img = [UIImage imageNamed:icons[3]];
+                [self addIcon:rect index:3 image:img];
+                [images addObject:img];
+                [indexes addObject:@(3)];
+            }
+            if ([icons safeObjectAtIndex:4]) {
+                UIImage *img = [UIImage imageNamed:icons[4]];
+                [self addIcon:rect index:4 image:img];
+                [images addObject:img];
+                [indexes addObject:@(4)];
+            }
+            if ([icons safeObjectAtIndex:5]) {
+                UIImage *img = [UIImage imageNamed:icons[5]];
+                [self addIcon:rect index:7 image:img];
+                [images addObject:img];
+                [indexes addObject:@(5)];
+            }
+            if ([icons safeObjectAtIndex:6]) {
+                UIImage *img = [UIImage imageNamed:icons[6]];
+                [self addIcon:rect index:8 image:img];
+                [images addObject:img];
+                [indexes addObject:@(6)];
+            }
+            if ([icons safeObjectAtIndex:7]) {
+                UIImage *img = [UIImage imageNamed:icons[7]];
+                [self addIcon:rect index:9 image:img];
+                [images addObject:img];
+                [indexes addObject:@(7)];
+            }
+            if ([icons safeObjectAtIndex:8]) {
+                UIImage *img = [UIImage imageNamed:icons[8]];
+                [self addIcon:rect index:10 image:img];
+                [images addObject:img];
+                [indexes addObject:@(8)];
+            }
+            if ([icons safeObjectAtIndex:9]) {
+                UIImage *img = [UIImage imageNamed:icons[9]];
+                [self addIcon:rect index:11 image:img];
+                [images addObject:img];
+                [indexes addObject:@(9)];
+            }
+            
+            if ([self.delegate respondsToSelector:@selector(analogClockIcons:indexes:)]) {
+                [self.delegate analogClockIcons:[images copy] indexes:indexes];
+            }
+        }
     }
 }
 
 
-- (void)addIcon:(CGRect)rect index:(NSInteger)index image:(NSString *)image {
+- (void)addIcon:(CGRect)rect index:(NSInteger)index image:(UIImage *)image {
     
-    CGFloat iconSize = rect.size.height * 0.08;
+    CGFloat iconSize = rect.size.height * 0.085;
     CGFloat halfSize = iconSize / 2;
     
     NSInteger offset   = 3;
@@ -531,23 +588,55 @@
     CGFloat labelX = center.x + (radius - halfSize) * cos((M_PI / 180) * (index + offset + 0.5) * 30 + M_PI);
     CGFloat labelY = center.y + - 1 * (radius - halfSize) * sin((M_PI / 180) * (index + offset + 0.5) * 30);
     
+    CGSize nSize = [self getImageSize:aSize ofSize:image.size];
+    
     
     CGRect aRect = CGRectMake(labelX - aSize.width / 2.0f,
                               labelY - aSize.height / 2.0f,
-                              aSize.width,
-                              aSize.height);
-    
-    UIImage *img = [UIImage imageNamed:image];
-    
-    if (index == 2 || index == 7 || index == 7) {
-        img = [img tintedImageWithColor:[UIColor lightGrayColor]];
+                              nSize.width,
+                              nSize.height);
+    if (index == 1) {
+	    image = [image tintedImageWithColor:[UIColor redColor]];
     }
     
-    [img drawInRect:aRect];
+    [image drawInRect:aRect];
 }
+
+- (void)changeStateIcon:(UIImage *)icon {
+    
+    
+}
+
+- (CGSize)getImageSize:(CGSize)containerSize ofSize:(CGSize)ofSize {
+    CGSize drawImageSize;
+    
+    if (ofSize.height > ofSize.width) {
+        drawImageSize.height = containerSize.height;
+        drawImageSize.width  = ofSize.width/ofSize.height * containerSize.height;
+        
+    } else {
+        drawImageSize.width  = containerSize.width;
+        drawImageSize.height = containerSize.width * ofSize.height /  ofSize.width;
+    }
+    return drawImageSize;
+}
+
 
 @end
 
+
+
+@implementation NSArray (Additions)
+
+
+- (id)safeObjectAtIndex:(NSUInteger)index {
+    if (index >= [self count] || index < 0) {
+        return nil;
+    }
+    return [self objectAtIndex:index];
+}
+
+@end
 
 
 
