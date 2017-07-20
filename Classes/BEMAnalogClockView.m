@@ -14,10 +14,10 @@
 #endif
 
 @interface BEMAnalogClockView () {
-
+    
     /// Flag used to detect if all of the subviews should be drawn/redrawn or not. Default value is YES.
     BOOL shouldUpdateSubviews;
-
+    
     /// Flag used to detect if there is already a NSTimer that updates every second for the property realTime. Default value is NO.
     BOOL timerAlreadyInAction;
     
@@ -82,13 +82,14 @@
     _minutes = 10;
     _seconds = 0;
     
-    _enableShadows = YES;
+    _enableShadows     = YES;
     _enableGraduations = YES;
-    _enableDigit = NO;
-    _enableHub = NO;
-    _realTime = NO;
-    _currentTime = NO;
-    _setTimeViaTouch = NO;
+    _enableDigit       = NO;
+    _enableHub         = NO;
+    _enableIcons       = YES;
+    _realTime          = NO;
+    _currentTime       = NO;
+    _setTimeViaTouch   = NO;
     
     _faceBackgroundColor = [UIColor colorWithRed:0 green:122.0/255.0 blue:255/255 alpha:1];
     _faceBackgroundAlpha = 0.95;
@@ -114,11 +115,11 @@
     _secondHandWidth = 1;
     _secondHandLength = 60;
     _secondHandOffsideLength = 20;
-
+    
     _hubColor = [UIColor whiteColor];
     _hubAlpha = 1.0;
     _hubRadius = 3.0;
-
+    
     _digitColor = [UIColor whiteColor];
     _digitFont  = [UIFont fontWithName:@"HelveticaNeue-Thin" size:17];
     _digitOffset = 0.0;
@@ -203,10 +204,10 @@
 #endif
         
         if ([self.delegate respondsToSelector:@selector(currentTimeOnClock:Hours:Minutes:Seconds:)]) {
-        [self.delegate currentTimeOnClock:self Hours:[NSString stringWithFormat:@"%li", (long)self.hours] Minutes:[NSString stringWithFormat:@"%li", (long)self.minutes] Seconds:[NSString stringWithFormat:@"%li", (long)self.seconds]];
+            [self.delegate currentTimeOnClock:self Hours:[NSString stringWithFormat:@"%li", (long)self.hours] Minutes:[NSString stringWithFormat:@"%li", (long)self.minutes] Seconds:[NSString stringWithFormat:@"%li", (long)self.seconds]];
         }
         shouldUpdateSubviews = NO;
-    
+        
         if ([self.delegate respondsToSelector:@selector(clockDidFinishLoading:)])
             [self.delegate clockDidFinishLoading:self];
     }
@@ -251,7 +252,7 @@
     [self.minuteHand setDegree:[self degreesFromMinutes:self.minutes] animated:animated];
     [self.hourHand   setDegree:[self degreesFromHour:self.hours andMinutes:self.minutes] animated:animated];
     [self.secondHand setDegree:[self degreesFromMinutes:self.seconds] animated:animated];
-
+    
     if ([self.delegate respondsToSelector:@selector(currentTimeOnClock:Hours:Minutes:Seconds:)]) {
         [self.delegate currentTimeOnClock:self Hours:[NSString stringWithFormat:@"%li", (long)self.hours] Minutes:[NSString stringWithFormat:@"%li", (long)self.minutes] Seconds:[NSString stringWithFormat:@"%li", (long)self.seconds]];
     }
@@ -275,9 +276,9 @@
     [self.minuteHand setDegree:[self degreesFromMinutes:self.minutes] animated:animated];
     [self.hourHand   setDegree:[self degreesFromHour:self.hours andMinutes:self.minutes] animated:YES];
     [self.secondHand setDegree:[self degreesFromMinutes:self.seconds] animated:YES];
-
+    
     if ([self.delegate respondsToSelector:@selector(currentTimeOnClock:Hours:Minutes:Seconds:)]) {
-    [self.delegate currentTimeOnClock:self Hours:[NSString stringWithFormat:@"%li", (long)self.hours] Minutes:[NSString stringWithFormat:@"%li", (long)self.minutes] Seconds:[NSString stringWithFormat:@"%li", (long)self.seconds]];
+        [self.delegate currentTimeOnClock:self Hours:[NSString stringWithFormat:@"%li", (long)self.hours] Minutes:[NSString stringWithFormat:@"%li", (long)self.minutes] Seconds:[NSString stringWithFormat:@"%li", (long)self.seconds]];
     }
 }
 
@@ -404,6 +405,7 @@
     self.seconds = seconds;
 }
 
+
 #pragma mark - Drawings
 
 - (void)drawRect:(CGRect)rect {
@@ -420,7 +422,7 @@
     CGContextSetAlpha(ctx, self.borderAlpha);
     CGContextSetLineWidth(ctx,self.borderWidth);
     CGContextStrokePath(ctx);
-
+    
     // HUB
     if (self.enableHub == YES) {
         CGContextSetFillColorWithColor(ctx, self.hubColor.CGColor);
@@ -429,33 +431,33 @@
         CGContextAddArc(ctx, center.x, center.y, self.hubRadius, 0, 2 * M_PI, 0);
         CGContextFillPath(ctx);
     }
-
+    
     // CLOCK'S GRADUATION
     if (self.enableGraduations == YES) {
         for (int i = 0; i<60; i++) {
             if ([self.delegate respondsToSelector:@selector(analogClock:graduationColorForIndex:)]) {
                 self.graduationColor = [self.delegate analogClock:self graduationColorForIndex:i];
             } else self.graduationColor = [UIColor whiteColor];
-        
+            
             if ([self.delegate respondsToSelector:@selector(analogClock:graduationAlphaForIndex:)]) {
                 self.graduationAlpha = [self.delegate analogClock:self graduationAlphaForIndex:i];
             } else self.graduationAlpha = 1.0;
-        
+            
             if ([self.delegate respondsToSelector:@selector(analogClock:graduationWidthForIndex:)]) {
                 self.graduationWidth = [self.delegate analogClock:self graduationWidthForIndex:i];
             } else self.graduationWidth = 1.0;
-        
+            
             if ([self.delegate respondsToSelector:@selector(analogClock:graduationLengthForIndex:)]) {
                 self.graduationLength = [self.delegate analogClock:self graduationLengthForIndex:i];
             } else self.graduationLength = 5.0;
-        
+            
             if ([self.delegate respondsToSelector:@selector(analogClock:graduationOffsetForIndex:)]) {
                 self.graduationOffset = [self.delegate analogClock:self graduationOffsetForIndex:i];
             } else self.graduationOffset = 10.0;
-        
+            
             CGPoint P1 = CGPointMake((self.frame.size.width/2 + ((self.frame.size.width - self.borderWidth*2 - self.graduationOffset) / 2) * cos((6*i)*(M_PI/180)  - (M_PI/2))), (self.frame.size.width/2 + ((self.frame.size.width - self.borderWidth*2 - self.graduationOffset) / 2) * sin((6*i)*(M_PI/180)  - (M_PI/2))));
             CGPoint P2 = CGPointMake((self.frame.size.width/2 + ((self.frame.size.width - self.borderWidth*2 - self.graduationOffset - self.graduationLength) / 2) * cos((6*i)*(M_PI/180)  - (M_PI/2))), (self.frame.size.width/2 + ((self.frame.size.width - self.borderWidth*2 - self.graduationOffset - self.graduationLength) / 2) * sin((6*i)*(M_PI/180)  - (M_PI/2))));
-        
+            
             CAShapeLayer  *shapeLayer = [CAShapeLayer layer];
             UIBezierPath *path1 = [UIBezierPath bezierPath];
             shapeLayer.path = path1.CGPath;
@@ -464,13 +466,13 @@
             [path1 addLineToPoint:P2];
             path1.lineCapStyle = kCGLineCapSquare;
             [self.graduationColor set];
-        
+            
             [path1 strokeWithBlendMode:kCGBlendModeNormal alpha:self.graduationAlpha];
         }
     }
     
     // DIGIT DRAWING
-
+    
     if (self.enableDigit == YES) {
         CGPoint center = CGPointMake(rect.size.width/2.0f, rect.size.height/2.0f);
         CGFloat markingDistanceFromCenter = rect.size.width/2.0f - self.digitFont.lineHeight/4.0f - 15 + self.digitOffset;
@@ -478,11 +480,99 @@
         
         for(unsigned i = 0; i < 12; i ++){
             NSString *hourNumber = [NSString stringWithFormat:@"%@%d", [NSString stringWithFormat:@"%@", i+1<10 ? @" ": @""] , i + 1 ];
-            CGFloat labelX = center.x + (markingDistanceFromCenter - self.digitFont.lineHeight/2.0f) * cos((M_PI/180)* (i+offset) * 30 + M_PI);
+            CGFloat labelX = center.x + (markingDistanceFromCenter - self.digitFont.lineHeight/2.0f) * cos((M_PI/180)*(i+offset) * 30 + M_PI);
             CGFloat labelY = center.y + - 1 * (markingDistanceFromCenter - self.digitFont.lineHeight/2.0f) * sin((M_PI/180)*(i+offset) * 30);
-            [hourNumber drawInRect:CGRectMake(labelX - self.digitFont.lineHeight/2.0f,labelY - self.digitFont.lineHeight/2.0f,self.digitFont.lineHeight,self.digitFont.lineHeight) withAttributes:@{NSForegroundColorAttributeName: self.digitColor, NSFontAttributeName: self.digitFont}];
+            
+            CGRect aRect = CGRectMake(labelX - self.digitFont.lineHeight/2.0f,
+                                      labelY - self.digitFont.lineHeight/2.0f,
+                                      self.digitFont.lineHeight,
+                                      self.digitFont.lineHeight);
+            
+            [hourNumber drawInRect:aRect
+                    withAttributes:@{NSForegroundColorAttributeName: self.digitColor, NSFontAttributeName: self.digitFont}];
         }
     }
+    
+    // DIGIT ICONS
+    
+    if (self.enableIcons) {
+        
+        [self addIcon:rect index:11 image:@"icw_off"];
+        
+        [self addIcon:rect index:10 image:@"icw_call"];
+        [self addIcon:rect index:9 image:@"icw_mail"];
+        [self addIcon:rect index:8 image:@"icw_social"];
+        [self addIcon:rect index:7 image:@"icw_sleep"];
+        
+        [self addIcon:rect index:4 image:@"icw_run"];
+        [self addIcon:rect index:3 image:@"icw_document"];
+        [self addIcon:rect index:2 image:@"icw_calendar"];
+        [self addIcon:rect index:1 image:@"icw_messages"];
+        
+        [self addIcon:rect index:0 image:@"icw_on"];
+    }
+    
+}
+
+
+- (void)addIcon:(CGRect)rect index:(NSInteger)index image:(NSString *)image {
+    CGFloat iconSize = rect.size.height * 0.08;
+    CGFloat halfSize = iconSize / 2;
+    
+    NSInteger offset   = 3;
+    CGSize aSize       = CGSizeMake(iconSize, iconSize);
+    
+    CGPoint center = CGPointMake(rect.size.width / 2.0f, rect.size.height / 2.0f);
+    CGFloat radius = (rect.size.width / 2.0f) - aSize.height - 5;
+    
+    CGFloat labelX = center.x + (radius - halfSize) * cos((M_PI / 180) * (index + offset + 0.5) * 30 + M_PI);
+    CGFloat labelY = center.y + - 1 * (radius - halfSize) * sin((M_PI / 180) * (index + offset + 0.5) * 30);
+    
+    
+    CGRect aRect = CGRectMake(labelX - aSize.width / 2.0f,
+                              labelY - aSize.height / 2.0f,
+                              aSize.width,
+                              aSize.height);
+    
+    UIImage *img = [UIImage imageNamed:image];
+    
+    if (index == 2 || index == 7 || index == 7) {
+        img = [img tintedImageWithColor:[UIColor lightGrayColor]];
+    }
+    
+    [img drawInRect:aRect];
 }
 
 @end
+
+
+
+
+@implementation UIImage (Additions)
+
+- (UIImage *)tintedImageWithColor:(UIColor *)color
+{
+    CGRect imageRect = CGRectMake(0.0f, 0.0f, self.size.width, self.size.height);
+    
+    UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, self.scale);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    [self drawInRect:imageRect];
+    
+    CGContextSetFillColorWithColor(ctx, [color CGColor]);
+    CGContextSetBlendMode(ctx, kCGBlendModeSourceAtop);
+    CGContextFillRect(ctx, imageRect);
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
+    UIImage *darkImage = [UIImage imageWithCGImage:imageRef
+                                             scale:self.scale
+                                       orientation:self.imageOrientation];
+    CGImageRelease(imageRef);
+    
+    UIGraphicsEndImageContext();
+    
+    return darkImage;
+}
+
+@end
+

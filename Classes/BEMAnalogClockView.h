@@ -7,14 +7,14 @@
 //
 
 #if __has_feature(objc_modules)
-    // We recommend enabling Objective-C Modules in your project Build Settings for numerous benefits over regular #imports. Read more from the Modules documentation: http://clang.llvm.org/docs/Modules.html
-    @import Foundation;
-    @import UIKit;
-    @import CoreGraphics;
+// We recommend enabling Objective-C Modules in your project Build Settings for numerous benefits over regular #imports. Read more from the Modules documentation: http://clang.llvm.org/docs/Modules.html
+@import Foundation;
+@import UIKit;
+@import CoreGraphics;
 #else
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
-    #import <CoreGraphics/CoreGraphics.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 #endif
 
 #import "KSMHand.h"
@@ -58,6 +58,9 @@ IB_DESIGNABLE
 
 /// If set to YES, a circular hub will be drawn. Default value is NO;
 @property (nonatomic) IBInspectable BOOL enableHub;
+
+/// If set to YES, a icons can be addes in clock. Default value is YES;
+@property (nonatomic) IBInspectable BOOL enableIcons;
 
 /// If set to YES, the clock will be updated in real time (the second hand will move every second, the minute hand every minute...). Default value is NO;
 @property (nonatomic) BOOL realTime;
@@ -261,5 +264,11 @@ IB_DESIGNABLE
 /** Sent to the delegate each time the clock finishes loading or reloading. Note that the animation is not finished at this point in time.
  @param clock The clock object that finished loading or reloading. */
 - (void)clockDidFinishLoading:(BEMAnalogClockView *)clock;
+
+@end
+
+@interface UIImage (MTGAdditions)
+
+- (UIImage *)tintedImageWithColor:(UIColor *)color;
 
 @end
