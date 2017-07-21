@@ -499,7 +499,7 @@
     
     // ADD ICONS
     if (self.enableIcons) {
-        if ([self.delegate respondsToSelector:@selector(analogClockAddIcons)]) {
+        /*if ([self.delegate respondsToSelector:@selector(analogClockAddIcons)]) {
             NSMutableArray *images  = [NSMutableArray array];
             NSMutableArray *indexes = [NSMutableArray array];
             
@@ -569,7 +569,7 @@
             if ([self.delegate respondsToSelector:@selector(analogClockIcons:indexes:)]) {
                 [self.delegate analogClockIcons:[images copy] indexes:indexes];
             }
-        }
+        }*/
     }
 }
 
@@ -602,10 +602,6 @@
     [image drawInRect:aRect];
 }
 
-- (void)changeStateIcon:(UIImage *)icon {
-    
-    
-}
 
 - (CGSize)getImageSize:(CGSize)containerSize ofSize:(CGSize)ofSize {
     CGSize drawImageSize;
